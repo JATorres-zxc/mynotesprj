@@ -4,6 +4,8 @@ from rest_framework.decorators import api_view
 from .models import Note
 from .serializers import NoteSerializer
 
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 # Create your views here.
 @api_view(['GET'])
@@ -91,5 +93,15 @@ def getNote(request, pk):
     
     
     
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
 
+        token['username'] = user.username
+
+        return token
+    
+class MyTokenObtainPairView(TokenObtainPairView):
+    serializer_class = MyTokenObtainPairSerializer
 
