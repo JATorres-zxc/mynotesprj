@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-4wvim)egfso=)s6ao#7)ms%xotqk0p^#fi)1vbjnp95kj!q4k6
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['mynotesprj-production-d1a0.up.railway.app', 'mynotesprj.netlify.app']
+ALLOWED_HOSTS = ['mynotesprj-production.railway.app', 'mynotesprj.netlify.app']
 
 
 # Application definition
