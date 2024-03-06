@@ -7,6 +7,7 @@ from .serializers import NoteSerializer
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 
+
 # Create your views here.
 @api_view(['GET'])
 def getRoutes(request):
@@ -45,31 +46,33 @@ def getRoutes(request):
     ]
     return Response(routes)
 
+# to GET all notes or to POST(CREATE) new note
 @api_view(['GET', 'POST'])
 def getNotes(request):
     
     if request.method == 'GET':
         # for all notes
-        notes = Note.objects.all().order_by('-updated')
-        serializer = NoteSerializer(notes, many=True)
+        notes = Note.objects.all().order_by('-updated') # order by desc of time updated
+        serializer = NoteSerializer(notes, many=True) #serialize
         
         return Response(serializer.data)
 
     # for creating a note
     if request.method == 'POST':
         data = request.data
-        note = Note.objects.create(body=data['body'])
-        serializer = NoteSerializer(note, many = False)
+        note = Note.objects.create(body=data['body']) # this is where you type the body.data
+        serializer = NoteSerializer(note, many = False) #serialize
         return Response(serializer.data)
 
 
+# to GET the single note, PUT(update) the body of a note and DELETE a note
 @api_view(['GET', 'PUT', 'DELETE'])
 def getNote(request, pk):
     
     if request.method == 'GET':
         # for single note so may pk
         notes = Note.objects.get(id=pk)
-        serializer = NoteSerializer(notes, many=False)
+        serializer = NoteSerializer(notes, many=False) #serialize
         
         return Response(serializer.data)
     
@@ -77,6 +80,7 @@ def getNote(request, pk):
     if request.method == 'PUT':
         data = request.data
         note = Note.objects.get(id=pk)
+        # create a serializer instance for note updated version
         serializer = NoteSerializer(instance=note, data=data)
         
         if serializer.is_valid():
@@ -95,7 +99,7 @@ def getNote(request, pk):
     
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
-    def get_token(cls, user):
+    def get_token(cls, user): # custom tokenserializer to include additional info(username) in token
         token = super().get_token(user)
 
         token['username'] = user.username
@@ -103,5 +107,5 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         return token
     
 class MyTokenObtainPairView(TokenObtainPairView):
-    serializer_class = MyTokenObtainPairSerializer
+    serializer_class = MyTokenObtainPairSerializer #to use the custome otekn serializer
 
